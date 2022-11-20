@@ -1,23 +1,57 @@
 export const initialState = {
-    todos: [
-        {
-            id : 0,
-            content: "First todo",
-        }
-    ]
-};
+    todos: [],
+  };
+  
+  const reducer = (state, action) => {
+    console.log(action);
+    switch (action.type) {
+      case 'ADD_TODO':
+        return {
+          ...state,
+          todos: [action.payload, ...state.todos],
+        };
 
-const reducer = (state, action) => {
-    console.log(action)
+        case 'REMOVE_TODO':
+        return {
+          ...state,
+          todos: [...state.todos].filter((todo) => todo.id!== action.payload),
+        };
 
-    switch(action.type){
-        case "ADD_TODO":
-            return {
-                ...state,
-            };
+        case 'COMPLATE_TODO':
+        return {
+          ...state,
+          todos: state.todos.map((todo) => {
+            if(todo.id !== action.payload){
+              return todo;
+            }
+
+            return{
+              ...todo,
+              isComplated: !todo.isComplated,
+            }
+          })
+        };
+
+
+        case 'UPDATE_TODO':
+        return {
+          ...state,
+          todos: state.todos.map((todo) => {
+            if(todo.id !== action.payload.todoId){
+              return todo;
+            }
+
+            return{
+              ...todo,
+              content: action.payload.newValue,
+            }
+          })
+        };
+
+
         default: 
             return {
-                ...state,
+                state,
             }; 
     }
 } 
